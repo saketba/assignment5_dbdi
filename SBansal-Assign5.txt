@@ -1,0 +1,175 @@
+Question 1:
+
+quantityOnHand
+--------------
+           100
+
+This searches the item table for any item whose description contains the word "antibiotics" and returns how many of that item are on hand.
+The question does not give the exact item name or ID, so the query matches on the word itself instead of hardcoding either one.
+
+
+Question 2:
+
+volunteerName
+-------------
+Gene Lewin
+
+This checks each volunteer against two conditions: their phone number doesn't begin with the digit 2, and their name doesn't end in the last name "Jones."
+It returns the names of volunteers who pass both checks. The schema stores the full name in one column, so the query treats "Jones" as a last name by matching
+it at the end of the name, after a space. Volunteer with no phone number on file are left out, because a missing number can't be said to start or not start with 2.
+
+
+Question 3:
+
+volunteerName
+-------------
+George Brewer
+
+This links each volunteer to the tasks they're assigned to, then looks up each task's type, and keeps only the tasks whose type is "transporting." It retruns the names
+of the volunteers left after that filter. Each name appears only once, even if that person is assigned to more than one transporting task.
+
+
+Question 4:
+
+       taskDescription
+------------------------------
+Prepare 100 food packages
+Take packages to the warehouse
+
+The inner query collects every task code that shows up in the assignments, which is every task that has at least one volunteer. The outer query then returns the descriptions
+of the tasks whose codes are missing from that list. Those are the tasks nobody has been assigned to yet.
+
+
+Question 5:
+
+packageTypeName
+---------------
+food and water
+
+This goes from each package type to the packages of that type, then to the items packed inside them. It keeps only the items whose description mentions “bottle” anywhere in the text,
+and returns the type names of the packages holding those items. Each type is listed once, even when several of its packages contain bottles.
+
+
+Question 6:
+
+   itemDescription
+---------------------
+bottle of antibiotics
+bottle of aspirin
+flashlight
+pack of bandages
+
+The inner query collects the ID of every item that has been packed into at least one package. The outer query then returns the descriptions of all items
+whose IDs don’t appear in that list, meaning the items that were never put in any package.
+
+
+Question 7:
+
+       taskDescription
+------------------------------
+Prepare 5,000 packages
+Prepare 20 children's packages
+Prepare 100 water packages
+Prepare 20 children's packages
+
+The inner query finds volunteers whose address ends in “NJ” and collects the codes of the tasks they’re assigned to. The outer query then goes through the
+task table and returns the description of each task whose code is in that list. Because it reads from the task table, each task appears once, even when
+several New Jersey volunteers share it.
+
+
+Question 8:
+
+volunteerName
+-------------
+Joan Simmons
+Chris Jordan
+
+The inner query finds every assignment that started on or after January 1, 2021 and before July 1, 2021, and collects the IDs of the volunteers on those
+assignments. The outer query then returns the names of the volunteers whose IDs are in that list. Each volunteer appears once, even if they started more
+than one assignment in that window.
+
+
+Question 9:
+
+volunteerName
+-------------
+Julie White
+Gerry Banks
+
+The inner query starts from the assignments and follows each task to the packages made for it. From there it goes to the items packed in those packages and
+keeps only the items whose description mentions “spam.” That gives the IDs of every volunteer assigned to a task that packed spam. The outer query then returns
+the names for those IDs, each name once.
+
+
+Question 10:
+
+itemDescription
+---------------
+Baby formula
+
+For every item placed in a package, the inner query multiplies how many units were packed by the value of one unit. It keeps the items where that total comes
+to exactly $100 within a single package. The outer query then returns the descriptions of those items, listing each item once even if it reaches $100 in more
+than one package.
+
+
+Question 11:
+
+taskStatusName  volunteerCount
+--------------  --------------
+open                         4
+closed                       3
+ongoing                      2
+pending                      1
+
+This connects each status to the tasks that have it, then to the volunteers assigned to those tasks. It groups the results by status and counts the volunteers
+in each group. A volunteer with two tasks of the same status is counted only once. The statuses are then listed from the most volunteers to the fewest.
+
+
+Question 12:
+
+taskCode  totalWeight
+--------  -----------
+     106        308.0
+
+This groups the packages by the task that created them and adds up the weights in each group, giving every task’s total package weight. It sorts the tasks
+from heaviest total to lightest and keeps only the first row, which is the task with the heaviest set of packages along with its weight.
+
+
+Question 13:
+
+taskCount
+---------
+        3
+
+This looks up the type name for each task, removes every task whose type is “packing,” and counts the tasks that are left.
+
+
+Question 14:
+
+itemDescription
+---------------
+can of spam
+dried fruit
+men's coat
+sleeping bag
+tent
+women's coat
+
+This starts from items that appear in at least one package, which limits it to items that have been packed. It follows each package to the task that produced
+it, and then to the volunteers assigned to that task. For each item, it counts how many different volunteers were involved across all the packages it went into,
+and keeps the items with fewer than 3. The volunteers are joined with a LEFT JOIN so that an item whose packing task has no volunteers still shows up, with a
+count of zero, instead of being dropped.
+
+
+Question 15:
+
+packageId  totalValue
+---------  ----------
+        6       150.0
+        2       151.0
+        4       350.0
+       10       750.0
+        5      1420.0
+
+For each line in a package, this multiplies the quantity packed by the item’s unit value. It adds those amounts together per package to get each package’s total
+value, keeps only the packages whose total is more than 100, and lists them from lowest value to highest.
